@@ -2,27 +2,29 @@ import 'package:flutter/material.dart';
 
 import 'difficulty.dart';
 
-class Task extends StatefulWidget  {
+class Task extends StatefulWidget {
   final String nome;
   final String image;
-  final int difficultyLevel;
+  final int difficulty;
+  int maestria = 0;
 
-  //final bool isOpacityVisible;
-
-  Task(this.nome, this.image, this.difficultyLevel, {super.key});
-
+  Task({
+    this.maestria = 0,
+    required this.nome,
+    required this.image,
+    required this.difficulty,
+    Key? key,
+  }) : super(key: key);
 
   int constantNivel = 0;
   bool levelMax = false;
-  var nivel = 0;
+  int nivel = 0;
 
   @override
   State<Task> createState() => _TaskState();
 }
 
 class _TaskState extends State<Task> {
-
-
   bool isAsset() {
     if (widget.image.contains('http')) {
       return false;
@@ -31,22 +33,22 @@ class _TaskState extends State<Task> {
   }
 
   maestryColor() {
-    if (widget.constantNivel >= widget.difficultyLevel * 10 &&
-        widget.constantNivel < widget.difficultyLevel * 20) {
+    if (widget.constantNivel >= widget.difficulty * 10 &&
+        widget.constantNivel < widget.difficulty * 20) {
       return Colors.green;
-    } else if (widget.constantNivel >= widget.difficultyLevel * 20 &&
-        widget.constantNivel < widget.difficultyLevel * 30) {
+    } else if (widget.constantNivel >= widget.difficulty * 20 &&
+        widget.constantNivel < widget.difficulty * 30) {
       return Colors.amberAccent;
-    } else if (widget.constantNivel >= widget.difficultyLevel * 30 &&
-        widget.constantNivel < widget.difficultyLevel * 40) {
+    } else if (widget.constantNivel >= widget.difficulty * 30 &&
+        widget.constantNivel < widget.difficulty * 40) {
       return Colors.orange;
-    } else if (widget.constantNivel >= widget.difficultyLevel * 40 &&
-        widget.constantNivel < widget.difficultyLevel * 50) {
+    } else if (widget.constantNivel >= widget.difficulty * 40 &&
+        widget.constantNivel < widget.difficulty * 50) {
       return Colors.red;
-    } else if (widget.constantNivel >= widget.difficultyLevel * 50 &&
-        widget.constantNivel < widget.difficultyLevel * 60) {
+    } else if (widget.constantNivel >= widget.difficulty * 50 &&
+        widget.constantNivel < widget.difficulty * 60) {
       return Colors.purple;
-    } else if (widget.constantNivel >= widget.difficultyLevel * 60) {
+    } else if (widget.constantNivel >= widget.difficulty * 60) {
       return Colors.black;
     } else {
       return Colors.blueGrey;
@@ -102,7 +104,7 @@ class _TaskState extends State<Task> {
                               style: const TextStyle(fontSize: 24),
                               overflow: TextOverflow.ellipsis,
                             )),
-                        Difficulty(difficultyLevel: widget.difficultyLevel),
+                        Difficulty(difficultyLevel: widget.difficulty),
                       ],
                     ),
                   ),
@@ -116,10 +118,10 @@ class _TaskState extends State<Task> {
                             setState(() {
                               widget.nivel++;
                               widget.constantNivel++;
-                              if (widget.nivel == widget.difficultyLevel * 10) {
+                              if (widget.nivel == widget.difficulty * 10) {
                                 widget.nivel = 0;
                               } else if (widget.constantNivel >=
-                                  widget.difficultyLevel * 60) {
+                                  widget.difficulty * 60) {
                                 widget.levelMax = true;
                               }
                             });
@@ -150,15 +152,16 @@ class _TaskState extends State<Task> {
                       width: 200,
                       child: LinearProgressIndicator(
                         color: Colors.blue,
-                        value:
-                        widget.levelMax ? 1 : (widget.nivel / widget.difficultyLevel) / 10,
+                        value: widget.levelMax
+                            ? 1
+                            : (widget.nivel / widget.difficulty) / 10,
                       )),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(6.0),
                   child: Text(
                     style: const TextStyle(color: Colors.white, fontSize: 20),
-                    widget.levelMax ? 'MAX' : 'Nivel: $widget.nivel',
+                    widget.levelMax ? 'MAX' : 'Nivel: ${widget.nivel}',
                   ),
                 ),
               ],
