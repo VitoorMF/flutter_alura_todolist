@@ -10,8 +10,8 @@ class TaskInherited extends InheritedWidget {
 
 
   final List<Task> taskList = [
-    const Task('Aprender Flutter', 'assets/images/flutter.png', 3),
-    const Task('Academia', 'assets/images/fakenatty.jpg', 2),
+     Task('Aprender Flutter', 'assets/images/flutter.png', 3),
+     Task('Academia', 'assets/images/fakenatty.jpg', 2),
 
   ];
 

@@ -16,6 +16,22 @@ class _FormScreenState extends State<FormScreen> {
   TextEditingController imageController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  bool valueValidator(String? value) {
+    if (value != null && value.isEmpty) {
+      return true;
+    }
+    return false;
+  }
+
+  bool difficultyValidator(value) {
+    if (value != null && value.isEmpty) {
+      if (int.parse(value) > 5 || int.parse(value) < 1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -49,7 +65,7 @@ class _FormScreenState extends State<FormScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     validator: (String? value) {
-                      if (value != null && value.isEmpty) {
+                      if (valueValidator(value)) {
                         return 'Insira o nome da tarefa';
                       }
                       return null;
@@ -67,9 +83,7 @@ class _FormScreenState extends State<FormScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     validator: (value) {
-                      if (value!.isEmpty ||
-                          int.parse(value) > 5 ||
-                          int.parse(value) < 1) {
+                      if (difficultyValidator(value)) {
                         return 'Insira um número entre 1 a 5';
                       }
                       return null;
@@ -88,7 +102,7 @@ class _FormScreenState extends State<FormScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     validator: (value) {
-                      if (value!.isEmpty) {
+                      if (valueValidator(value)) {
                         return 'insira um URL de imagem';
                       }
                       return null;
@@ -136,8 +150,8 @@ class _FormScreenState extends State<FormScreen> {
                           nameController.text,
                           imageController.text,
                           int.parse(difficultyController.text));
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Criando nova tarefa!')));
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Criando nova tarefa!')));
                       Navigator.pop(context);
                     }
                   },

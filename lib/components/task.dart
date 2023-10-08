@@ -2,23 +2,26 @@ import 'package:flutter/material.dart';
 
 import 'difficulty.dart';
 
-class Task extends StatefulWidget {
+class Task extends StatefulWidget  {
   final String nome;
   final String image;
   final int difficultyLevel;
 
   //final bool isOpacityVisible;
 
-  const Task(this.nome, this.image, this.difficultyLevel, {super.key});
+  Task(this.nome, this.image, this.difficultyLevel, {super.key});
+
+
+  int constantNivel = 0;
+  bool levelMax = false;
+  var nivel = 0;
 
   @override
   State<Task> createState() => _TaskState();
 }
 
 class _TaskState extends State<Task> {
-  var nivel = 0;
-  int constantNivel = 0;
-  bool levelMax = false;
+
 
   bool isAsset() {
     if (widget.image.contains('http')) {
@@ -28,22 +31,22 @@ class _TaskState extends State<Task> {
   }
 
   maestryColor() {
-    if (constantNivel >= widget.difficultyLevel * 10 &&
-        constantNivel < widget.difficultyLevel * 20) {
+    if (widget.constantNivel >= widget.difficultyLevel * 10 &&
+        widget.constantNivel < widget.difficultyLevel * 20) {
       return Colors.green;
-    } else if (constantNivel >= widget.difficultyLevel * 20 &&
-        constantNivel < widget.difficultyLevel * 30) {
+    } else if (widget.constantNivel >= widget.difficultyLevel * 20 &&
+        widget.constantNivel < widget.difficultyLevel * 30) {
       return Colors.amberAccent;
-    } else if (constantNivel >= widget.difficultyLevel * 30 &&
-        constantNivel < widget.difficultyLevel * 40) {
+    } else if (widget.constantNivel >= widget.difficultyLevel * 30 &&
+        widget.constantNivel < widget.difficultyLevel * 40) {
       return Colors.orange;
-    } else if (constantNivel >= widget.difficultyLevel * 40 &&
-        constantNivel < widget.difficultyLevel * 50) {
+    } else if (widget.constantNivel >= widget.difficultyLevel * 40 &&
+        widget.constantNivel < widget.difficultyLevel * 50) {
       return Colors.red;
-    } else if (constantNivel >= widget.difficultyLevel * 50 &&
-        constantNivel < widget.difficultyLevel * 60) {
+    } else if (widget.constantNivel >= widget.difficultyLevel * 50 &&
+        widget.constantNivel < widget.difficultyLevel * 60) {
       return Colors.purple;
-    } else if (constantNivel >= widget.difficultyLevel * 60) {
+    } else if (widget.constantNivel >= widget.difficultyLevel * 60) {
       return Colors.black;
     } else {
       return Colors.blueGrey;
@@ -111,13 +114,13 @@ class _TaskState extends State<Task> {
                       child: ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              nivel++;
-                              constantNivel++;
-                              if (nivel == widget.difficultyLevel * 10) {
-                                nivel = 0;
-                              } else if (constantNivel >=
+                              widget.nivel++;
+                              widget.constantNivel++;
+                              if (widget.nivel == widget.difficultyLevel * 10) {
+                                widget.nivel = 0;
+                              } else if (widget.constantNivel >=
                                   widget.difficultyLevel * 60) {
-                                levelMax = true;
+                                widget.levelMax = true;
                               }
                             });
                           },
@@ -148,15 +151,14 @@ class _TaskState extends State<Task> {
                       child: LinearProgressIndicator(
                         color: Colors.blue,
                         value:
-                            levelMax ? 1 : (nivel / widget.difficultyLevel) / 10,
+                        widget.levelMax ? 1 : (widget.nivel / widget.difficultyLevel) / 10,
                       )),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(6.0),
                   child: Text(
-                    //"Nível: $nivel",
                     style: const TextStyle(color: Colors.white, fontSize: 20),
-                    levelMax ? 'MAX' : 'Nivel: $nivel',
+                    widget.levelMax ? 'MAX' : 'Nivel: $widget.nivel',
                   ),
                 ),
               ],
