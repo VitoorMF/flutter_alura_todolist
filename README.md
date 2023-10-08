@@ -1,6 +1,10 @@
 # flutter_alura
 
+
+![Animação](https://github.com/VitoorMF/flutter_alura_todolist/assets/124313720/afed2c9b-7512-4f4e-abdc-0a15b15bdbfa)
+
 projeto 01 do curso da alura de 1st apk
+
 
 ## Getting Started
 
