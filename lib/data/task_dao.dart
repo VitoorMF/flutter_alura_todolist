@@ -72,16 +72,6 @@ class TaskDao {
     return tarefas;
   }
 
-  getLevel() async{
-    final Database bancoDeDados = await getDatabase();
-    print('NIVEL: $_nivel');
-    return _nivel;
-  }
-  getDifficulty() async{
-    final Database bancoDeDados = await getDatabase();
-    return _difficulty;
-  }
-
   updateLevel(Task tarefa) async {
     print('update');
     final Database bancoDeDados = await getDatabase();

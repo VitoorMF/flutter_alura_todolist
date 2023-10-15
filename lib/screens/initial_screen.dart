@@ -11,13 +11,9 @@ class InitialScreen extends StatefulWidget {
   @override
   State<InitialScreen> createState() => _InitialScreenState();
 }
-double level = TaskDao().getLevel();
-double levelGlobal = 0;
+
 
 class _InitialScreenState extends State<InitialScreen> {
-
-
-
   Future refresh() async{
     setState(() {});
   }
