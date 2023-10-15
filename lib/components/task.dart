@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_alura/data/task_dao.dart';
 
 import 'difficulty.dart';
 
@@ -6,15 +7,17 @@ class Task extends StatefulWidget {
   final String nome;
   final String image;
   final int difficulty;
-  int maestria = 0;
 
-  Task({
-    this.maestria = 0,
-    required this.nome,
-    required this.image,
-    required this.difficulty,
-    Key? key,
-  }) : super(key: key);
+  Task(
+    this.nome,
+    this.image,
+    this.difficulty,
+    this.nivel,
+    {super.key});
+
+  Task getTask() {
+    return Task(nome, image, difficulty, nivel);
+  }
 
   int constantNivel = 0;
   bool levelMax = false;
@@ -114,10 +117,34 @@ class _TaskState extends State<Task> {
                       height: 65,
                       width: 65,
                       child: ElevatedButton(
+                          onLongPress: () async {
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: const Text('Excluir Tarefa?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, 'Não'),
+                                    child: const Text('Cancelar'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      await TaskDao().delete(widget.nome);
+                                      setState(() {});
+                                      Navigator.pop(context, 'Sim');
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                           onPressed: () {
                             setState(() {
                               widget.nivel++;
                               widget.constantNivel++;
+                              TaskDao().updateLevel(widget.getTask());
                               if (widget.nivel == widget.difficulty * 10) {
                                 widget.nivel = 0;
                               } else if (widget.constantNivel >=

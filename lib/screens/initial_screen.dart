@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_alura/data/task_dao.dart';
 import 'package:flutter_alura/data/task_inherited.dart';
 import 'package:flutter_alura/screens/form_screen.dart';
 
@@ -10,89 +11,106 @@ class InitialScreen extends StatefulWidget {
   @override
   State<InitialScreen> createState() => _InitialScreenState();
 }
-
+double level = TaskDao().getLevel();
 double levelGlobal = 0;
 
 class _InitialScreenState extends State<InitialScreen> {
-  void calculateLevelGlobal() {
-    double level = 0;
-    for (Task task in TaskInherited.of(context).taskList) {
-      level += task.constantNivel / 10 * task.difficulty;
-    }
-    levelGlobal = level;
+
+
+
+  Future refresh() async{
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 80,
-        leading: const Icon(Icons.notes, color: Colors.white, size: 30),
+        leading:  Icon(Icons.notes, color: Colors.white, size: 30),
         backgroundColor: Colors.blueGrey,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(right: 50.0),
-              child: Text('Tarefas',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 25)),
-            ),
-            Row(
-              children: [
-                SizedBox(
-                    width: 230,
-                    height: 9,
-                    child: LinearProgressIndicator(
-                      borderRadius: const BorderRadius.all(Radius.circular(2)),
-                      color: Colors.blue,
-                      value: levelGlobal / 100,
-                    )),
-                IconButton(
-                    onPressed: () {
-                      showDialog<String>(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                          title: const Text('Nível do Usuário'),
-                          content: Text(
-                              'Usuário nível: ${levelGlobal.toStringAsFixed(2)}',
-                              style: const TextStyle(fontSize: 15)),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'OK'),
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        ),
+        title: Text('Tarefas',
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+                fontSize: 25)),
+      ),
+      body: RefreshIndicator(
+        onRefresh: refresh,
+        child: Padding(
+          padding: EdgeInsets.only(top: 8, bottom: 70),
+          child: FutureBuilder<List<Task>>(
+              future: TaskDao().findAll(),
+              builder: (context, snapshot) {
+                List<Task>? items = snapshot.data;
+                switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                    return const Center(
+                      child: Column(children: [
+                        CircularProgressIndicator(),
+                        Text('Carregando')
+                      ]),
+                    );
+                    break;
+                  case ConnectionState.waiting:
+                    return const Center(
+                      child: Column(children: [
+                        CircularProgressIndicator(),
+                        Text('Carregando')
+                      ]),
+                    );
+                    break;
+                  case ConnectionState.active:
+                    return const Center(
+                      child: Column(children: [
+                        CircularProgressIndicator(),
+                        Text('Carregando')
+                      ]),
+                    );
+                    break;
+                  case ConnectionState.done:
+                    if (snapshot.hasData && items != null) {
+                      if (items.isNotEmpty) {
+                        return ListView.builder(
+                            itemCount: items.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final Task tarefa = items[index];
+                              return tarefa;
+                            });
+                      }
+                      return const Center(
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.error_outline_sharp,
+                                size: 80,
+                                color: Colors.black38,
+                              ),
+                              Text(
+                                'Não há nenhuma tarefa',
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.black45),
+                              )
+                            ]),
                       );
-                      setState(() {
-                        calculateLevelGlobal();
-                      });
-                    },
-                    icon: const Icon(
-                      Icons.play_arrow_rounded,
-                      color: Colors.white,
-                      size: 30,
-                    )),
-              ],
-            ),
-          ],
+                    }
+                    return Text(' Erro ao carregar tarefas ');
+                    break;
+                }
+                return Text('Erro desconhecido');
+              }),
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.only(top: 8, bottom: 70),
-        children: TaskInherited.of(context).taskList,
-      ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (contextNew) => FormScreen(
-                          taskContext: context,
-                        )));
+          onPressed: () async {
+          await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (contextNew) => FormScreen(
+                  taskContext: context,
+                ),
+              ),
+            ).then((value) => setState(() => {}));
           },
           backgroundColor: Colors.redAccent,
           child: const Icon(

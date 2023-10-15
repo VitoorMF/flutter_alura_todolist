@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_alura/data/task_inherited.dart';
+import 'package:flutter_alura/components/task.dart';
+import 'package:flutter_alura/data/task_dao.dart';
 
 class FormScreen extends StatefulWidget {
   const FormScreen({super.key, required this.taskContext});
@@ -15,6 +16,8 @@ class _FormScreenState extends State<FormScreen> {
   TextEditingController difficultyController = TextEditingController();
   TextEditingController imageController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  bool isSaveButtonPressed = false;
 
   bool valueValidator(String? value) {
     if (value != null && value.isEmpty) {
@@ -144,12 +147,16 @@ class _FormScreenState extends State<FormScreen> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async{
+                    setState(() {});
                     if (_formKey.currentState!.validate()) {
-                      TaskInherited.of(widget.taskContext).newTask(
-                          nameController.text,
-                          imageController.text,
-                          int.parse(difficultyController.text));
+                      int nivel = 0;
+                      await TaskDao().save(Task(
+                        nameController.text,
+                        imageController.text,
+                        int.parse(difficultyController.text),
+                        nivel,
+                      ));
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text('Criando nova tarefa!')));
                       Navigator.pop(context);
