@@ -51,123 +51,139 @@ class _FormScreenState extends State<FormScreen> {
             ],
           ),
         ),
-        body: Center(
-            child: SingleChildScrollView(
-          child: Container(
-            width: 375,
-            height: 650,
-            decoration: BoxDecoration(
-                color: Colors.black12,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(width: 1)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    validator: (String? value) {
-                      if (valueValidator(value)) {
-                        return 'Insira o nome da tarefa';
-                      }
-                      return null;
-                    },
-                    controller: nameController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Nome',
-                      fillColor: Colors.white70,
-                      filled: true,
-                    ),
+        body: Container(
+          color: Colors.black26,
+          child: Center(
+              child: SingleChildScrollView(
+            child: Container(
+              width: 375,
+              height: 650,
+              decoration: BoxDecoration(
+                color: Colors.white70,
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 1), // changes position of shadow
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    validator: (value) {
-                      if (difficultyValidator(value)) {
-                        return 'Insira um número entre 1 a 5';
-                      }
-                      return null;
-                    },
-                    keyboardType: TextInputType.number,
-                    controller: difficultyController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Dificuldade',
-                      fillColor: Colors.white70,
-                      filled: true,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    validator: (value) {
-                      if (valueValidator(value)) {
-                        return 'insira um URL de imagem';
-                      }
-                      return null;
-                    },
-                    onChanged: (text) {
-                      setState(() {});
-                    },
-                    keyboardType: TextInputType.url,
-                    controller: imageController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'imagem',
-                      fillColor: Colors.white70,
-                      filled: true,
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 100,
-                  width: 72,
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(width: 1, color: Colors.blue),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      imageController.text,
-                      fit: BoxFit.cover,
-                      errorBuilder: (BuildContext context, Object exeption,
-                          StackTrace? stackTrace) {
-                        return Image.asset(
-                          'assets/images/nophoto.jpg',
-                          fit: BoxFit.fitHeight,
-                        );
+                ],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      validator: (String? value) {
+                        if (valueValidator(value)) {
+                          return 'Insira o nome da tarefa';
+                        }
+                        return null;
                       },
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(borderRadius:
+                        BorderRadius.all(Radius.circular(10))),
+                        hintText: 'Nome',
+                        fillColor: Colors.white70,
+                        filled: true,
+                      ),
                     ),
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: () async{
-                    setState(() {});
-                    if (_formKey.currentState!.validate()) {
-                      int nivel = 0;
-                      await TaskDao().save(Task(
-                        nameController.text,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      validator: (value) {
+                        if (difficultyValidator(value)) {
+                          return 'Insira um número entre 1 a 5';
+                        }
+                        return null;
+                      },
+                      keyboardType: TextInputType.number,
+                      controller: difficultyController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(borderRadius:
+                        BorderRadius.all(Radius.circular(10))),
+                        hintText: 'Dificuldade',
+                        fillColor: Colors.white70,
+                        filled: true,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      validator: (value) {
+                        if (valueValidator(value)) {
+                          return 'insira um URL de imagem';
+                        }
+                        return null;
+                      },
+                      onChanged: (text) {
+                        setState(() {});
+                      },
+                      keyboardType: TextInputType.url,
+                      controller: imageController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        hintText: 'imagem',
+                        fillColor: Colors.white70,
+                        filled: true,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 100,
+                    width: 72,
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(width: 1, color: Colors.blue),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
                         imageController.text,
-                        int.parse(difficultyController.text),
-                        nivel,
-                      ));
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text('Criando nova tarefa!')));
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: const Text('adicionar'),
-                )
-              ],
+                        fit: BoxFit.cover,
+                        errorBuilder: (BuildContext context, Object exeption,
+                            StackTrace? stackTrace) {
+                          return Image.asset(
+                            'assets/images/nophoto.jpg',
+                            fit: BoxFit.fitHeight,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      setState(() {});
+                      if (_formKey.currentState!.validate()) {
+                        int nivel = 0;
+                        await TaskDao().save(Task(
+                          nameController.text,
+                          imageController.text,
+                          int.parse(difficultyController.text),
+                          nivel,
+                        ));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Criando nova tarefa!')));
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: const Text('adicionar'),
+                  )
+                ],
+              ),
             ),
-          ),
-        )),
+          )),
+        ),
       ),
     );
   }
